@@ -1,0 +1,8 @@
+matplotlib
+mujoco
+mujoco-warp
+numpy
+scipy
+torch
+warp-lang
+zarr

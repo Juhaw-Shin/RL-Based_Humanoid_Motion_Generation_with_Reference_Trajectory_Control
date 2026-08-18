@@ -1,0 +1,21 @@
+run_id,started_at,ended_at,start_iteration,end_iteration,elapsed_seconds,checkpoint_path
+run_20260709_211122,2026-07-09 21:11:22,2026-07-09 21:11:26,0,0,0.6466550000477582,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_211122,2026-07-09 21:11:22,2026-07-09 21:11:26,0,0,0.6536795001011342,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_211317,2026-07-09 21:13:17,2026-07-09 21:13:21,0,1,0.4799291999079287,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_211317,2026-07-09 21:13:17,2026-07-09 21:13:21,0,1,0.4792272998020053,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_213518,2026-07-09 21:35:18,2026-07-09 21:35:20,0,0,0.3792901998385787,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215333,2026-07-09 21:53:33,2026-07-09 21:53:36,0,0,0.6330457001458853,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215547,2026-07-09 21:55:47,2026-07-09 21:55:50,0,2,0.5068310999777168,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215606,2026-07-09 21:56:06,2026-07-09 21:56:08,0,2,0.16371489991433918,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215606,2026-07-09 21:56:06,2026-07-09 21:56:08,0,2,0.13348630000837147,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215714,2026-07-09 21:57:14,2026-07-09 21:57:17,0,9,0.552161900093779,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_215714,2026-07-09 21:57:14,2026-07-09 21:57:17,0,9,0.5333573000971228,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_222027,2026-07-09 22:20:27,2026-07-09 22:20:32,201,203,0.4366277998778969,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_222027,2026-07-09 22:20:27,2026-07-09 22:20:32,201,203,0.4459116000216454,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_222154,2026-07-09 22:21:54,2026-07-09 22:21:58,201,202,0.4571271000895649,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260709_222154,2026-07-09 22:21:54,2026-07-09 22:21:58,201,202,0.4696245000232011,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260712_022302,2026-07-12 02:23:02,2026-07-12 02:23:06,348801,348801,0.4282545999158174,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260712_022302,2026-07-12 02:23:02,2026-07-12 02:23:06,348801,348801,0.45008330000564456,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260712_022328,2026-07-12 02:23:28,2026-07-12 02:23:30,348801,348801,0.08310970012098551,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260712_022328,2026-07-12 02:23:28,2026-07-12 02:23:30,348801,348801,0.05626420001499355,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt
+run_20260712_022328,2026-07-12 02:23:28,2026-07-12 02:23:30,348801,348801,0.07525729993358254,C:\Users\shinj\Desktop\Body\Torch_checkpoint_human_pelvisrel_inputmem_torque_latest.pt

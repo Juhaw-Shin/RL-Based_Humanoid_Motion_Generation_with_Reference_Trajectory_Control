@@ -1,0 +1,289 @@
+<mujoco model="noted_average_human_body_articulated">
+    <!--
+        Articulated version of the duplicate body model.
+
+        The visible geometry dimensions are preserved from the prior noted model.
+        Geoms are now placed inside nested MuJoCo bodies so the outer surfaces
+        are the physical collision/mass parts. No hidden bone geoms are used.
+
+        Values come from:
+        - Body Torque and limit angles.pdf
+        - MuJoCo_Human_Body_Joints_and_Actuation_Guide.docx
+
+        Coordinate convention: x forward, y left, z up.
+        Motors use gear +/-1, so ctrl and force values are direct N*m caps.
+    -->
+
+    <compiler angle="degree" inertiafromgeom="auto"/>
+
+    <option integrator="implicitfast" iterations="20" solver="Newton" timestep="0.0025"/>
+
+    <visual>
+        <map fogend="5" fogstart="3"/>
+        <global azimuth="150" elevation="-15"/>
+        <headlight ambient="0.35 0.35 0.35" diffuse="0.65 0.65 0.65" specular="0.2 0.2 0.2"/>
+    </visual>
+
+    <asset>
+        <texture builtin="gradient" height="100" rgb1=".4 .5 .6" rgb2="0 0 0" type="skybox" width="100"/>
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom"
+                 random="0.01" rgb1="0.80 0.60 0.47" rgb2="0.80 0.60 0.47" type="cube" width="127"/>
+        <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8"
+                 type="2d" width="100"/>
+        <material name="MatPlane" reflectance="0.35" shininess="1" specular="0.4"
+                  texrepeat="60 60" texture="texplane"/>
+        <material name="skin" texture="texgeom" texuniform="true" rgba="0.80 0.60 0.47 1"/>
+        <material name="skin_dark" rgba="0.68 0.47 0.37 1"/>
+    </asset>
+
+    <default>
+        <joint limited="true" damping="1.5" armature="0.002"/>
+        <geom conaffinity="1" condim="3" contype="1" density="950"
+              friction="0.6 0 0" margin="0" material="skin"/>
+        <motor ctrllimited="true"/>
+    </default>
+
+    <worldbody>
+        <light cutoff="100" diffuse="1 1 1" dir="0 0 -1.3" directional="true"
+               exponent="1" pos="0 0 3" specular=".1 .1 .1"/>
+        <geom condim="3" friction="1 .1 .1" material="MatPlane" name="floor"
+              pos="0 0 0" rgba="0.8 0.9 0.8 1" size="20 20 0.125" type="plane"/>
+        <camera name="front" pos="0 -3.2 1.0" xyaxes="1 0 0 0 0.35 0.94"/>
+        <camera name="side" pos="3.0 0 1.0" xyaxes="0 1 0 -0.35 0 0.94"/>
+
+        <body name="pelvis_body" pos="0 0 0.920">
+            <camera name="track" mode="trackcom" pos="0 -4 1.0" xyaxes="1 0 0 0 0 1"/>
+            <freejoint name="root"/>
+            <geom name="pelvis" type="ellipsoid" pos="0 0 0.015"
+                  size="0.115 0.170 0.105" mass="10.0" material="skin_dark"/>
+
+            <body name="lumbar_lower_body" pos="0 0 0.055">
+                <joint name="lumbar_lower_flex" axis="0 1 0" range="-9 20" damping="4" stiffness="20"/>
+                <joint name="lumbar_lower_lat" axis="1 0 0" range="-8 8" damping="3" stiffness="12"/>
+                <joint name="lumbar_lower_axial" axis="0 0 1" range="-5 5" damping="3" stiffness="10"/>
+                <geom name="lumbar_lower" type="ellipsoid" pos="0 0 0.045" size="0.105 0.145 0.075" mass="5.0"/>
+
+                <body name="lumbar_upper_body" pos="0 0 0.070">
+                    <joint name="lumbar_upper_flex" axis="0 1 0" range="-8 20" damping="4" stiffness="18"/>
+                    <joint name="lumbar_upper_lat" axis="1 0 0" range="-8 8" damping="3" stiffness="12"/>
+                    <joint name="lumbar_upper_axial" axis="0 0 1" range="-5 5" damping="3" stiffness="10"/>
+                    <geom name="lumbar_upper" type="ellipsoid" pos="0 0 0.040" size="0.110 0.165 0.075" mass="5.0"/>
+
+                    <body name="thoracic_lower_body" pos="0 0 0.080">
+                        <joint name="thoracic_lower_flex" axis="0 1 0" range="-5 15" damping="4" stiffness="16"/>
+                        <joint name="thoracic_lower_lat" axis="1 0 0" range="-8 8" damping="3" stiffness="12"/>
+                        <joint name="thoracic_lower_axial" axis="0 0 1" range="-12 12" damping="3" stiffness="8"/>
+                        <geom name="thoracic_lower" type="ellipsoid" pos="0 0 0.065" size="0.125 0.200 0.100" mass="6.0"/>
+
+                        <body name="thoracic_upper_body" pos="0 0 0.130">
+                            <joint name="thoracic_upper_flex" axis="0 1 0" range="-4 15" damping="4" stiffness="14"/>
+                            <joint name="thoracic_upper_lat" axis="1 0 0" range="-8 8" damping="3" stiffness="10"/>
+                            <joint name="thoracic_upper_axial" axis="0 0 1" range="-12 12" damping="3" stiffness="8"/>
+                            <geom name="thoracic_upper" type="ellipsoid" pos="0 0 0.070" size="0.135 0.230 0.105" mass="6.6"/>
+
+                            <body name="neck_body" pos="0 0 0.140">
+                                <joint name="neck_flex" axis="0 1 0" range="-40 55" damping="2"/>
+                                <joint name="neck_lat" axis="1 0 0" range="-35 35" damping="2"/>
+                                <joint name="neck_axial" axis="0 0 1" range="-55 55" damping="2"/>
+                                <geom name="neck_stick" type="capsule" fromto="0 0 0  0 0 0.100" size="0.047" mass="0.4"/>
+                                <geom name="head" type="ellipsoid" pos="0 0 0.225" size="0.090 0.075 0.125" mass="4.8"/>
+                            </body>
+
+                            <body name="left_upper_arm_body" pos="0 0.210 0.075">
+                                <joint name="left_shoulder_flex" axis="0 -0.957024 -0.290007" range="-40 145" damping="2"/>
+                                <joint name="left_shoulder_abd" axis="1 0 0" range="-25 140" damping="2"/>
+                                <joint name="left_shoulder_rot" axis="0 0.290007 -0.957024" range="-60 70" damping="2"/>
+                                <geom name="left_upper_arm" type="capsule" fromto="0 0 0  0 0.090194 -0.297641" size="0.050" mass="2.03"/>
+
+                                <body name="left_forearm_body" pos="0 0.090194 -0.297641">
+                                    <joint name="left_elbow_flex" axis="0 -0.957024 -0.290007" range="0 135" damping="1.5"/>
+                                    <joint name="left_forearm_roll" axis="0 0.290007 -0.957024" range="-80 80" damping="0.8"/>
+                                    <geom name="left_forearm" type="capsule" fromto="0 0 0  0 0.071773 -0.236851" size="0.040" mass="1.22"/>
+
+                                    <body name="left_palm_body" pos="0 0.071773 -0.236851"
+                                          quat="0.707107 0 0.205066 -0.676718">
+                                        <joint name="left_wrist_flex" axis="0 -0.957024 -0.290007" range="-70 80" damping="0.7"/>
+                                        <joint name="left_wrist_dev" axis="1 0 0" range="-30 35" damping="0.7"/>
+                                        <geom name="left_palm" type="box" pos="0 0.023201 -0.076562"
+                                              quat="0.989198 0.146588 0 0" size="0.026 0.047 0.065"
+                                              friction="0.8 0 0" mass="0.30"/>
+
+                                        <body name="left_thumb_body" pos="0.020 0.045 -0.050">
+                                            <joint name="left_thumb_flex" axis="0 1 0" range="0 60" damping="0.3" armature="0.0001"/>
+                                            <geom name="left_thumb" type="capsule" fromto="0 0 0  0.025 0.040 -0.060" size="0.015" friction="0.8 0 0" mass="0.04"/>
+                                        </body>
+
+                                        <body name="left_fingers_body" pos="0 0.042051 -0.138769">
+                                            <joint name="left_fingers_flex" axis="0 -0.957024 -0.290007" range="0 80" damping="0.3" armature="0.0001"/>
+                                            <geom name="left_fingers_chunk" type="box" pos="0 0.007250 -0.023926"
+                                                  quat="0.989198 0.146588 0 0" size="0.024 0.045 0.035"
+                                                  friction="0.8 0 0" mass="0.12"/>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+
+                            <body name="right_upper_arm_body" pos="0 -0.210 0.075">
+                                <joint name="right_shoulder_flex" axis="0 -0.957024 0.290007" range="-40 145" damping="2"/>
+                                <joint name="right_shoulder_abd" axis="-1 0 0" range="-25 140" damping="2"/>
+                                <joint name="right_shoulder_rot" axis="0 -0.290007 -0.957024" range="-60 70" damping="2"/>
+                                <geom name="right_upper_arm" type="capsule" fromto="0 0 0  0 -0.090194 -0.297641" size="0.050" mass="2.03"/>
+
+                                <body name="right_forearm_body" pos="0 -0.090194 -0.297641">
+                                    <joint name="right_elbow_flex" axis="0 -0.957024 0.290007" range="0 135" damping="1.5"/>
+                                    <joint name="right_forearm_roll" axis="0 -0.290007 -0.957024" range="-80 80" damping="0.8"/>
+                                    <geom name="right_forearm" type="capsule" fromto="0 0 0  0 -0.071773 -0.236851" size="0.040" mass="1.22"/>
+
+                                    <body name="right_palm_body" pos="0 -0.071773 -0.236851"
+                                          quat="0.707107 0 0.205066 0.676718">
+                                        <joint name="right_wrist_flex" axis="0 -0.957024 0.290007" range="-70 80" damping="0.7"/>
+                                        <joint name="right_wrist_dev" axis="-1 0 0" range="-30 35" damping="0.7"/>
+                                        <geom name="right_palm" type="box" pos="0 -0.023201 -0.076562"
+                                              quat="0.989198 -0.146588 0 0" size="0.026 0.047 0.065"
+                                              friction="0.8 0 0" mass="0.30"/>
+
+                                        <body name="right_thumb_body" pos="0.020 -0.045 -0.050">
+                                            <joint name="right_thumb_flex" axis="0 1 0" range="0 60" damping="0.3" armature="0.0001"/>
+                                            <geom name="right_thumb" type="capsule" fromto="0 0 0  0.025 -0.040 -0.060" size="0.015" friction="0.8 0 0" mass="0.04"/>
+                                        </body>
+
+                                        <body name="right_fingers_body" pos="0 -0.042051 -0.138769">
+                                            <joint name="right_fingers_flex" axis="0 -0.957024 0.290007" range="0 80" damping="0.3" armature="0.0001"/>
+                                            <geom name="right_fingers_chunk" type="box" pos="0 -0.007250 -0.023926"
+                                                  quat="0.989198 -0.146588 0 0" size="0.024 0.045 0.035"
+                                                  friction="0.8 0 0" mass="0.12"/>
+                                        </body>
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+
+            <body name="left_thigh_body" pos="0 0.100 0">
+                <joint name="left_hip_flex" axis="0 -1 0" range="-20 120" damping="3"/>
+                <joint name="left_hip_abd" axis="1 0 0" range="-30 45" damping="3"/>
+                <joint name="left_hip_rot" axis="0 0 1" range="-45 45" damping="2"/>
+                <geom name="left_thigh" type="capsule" fromto="0 0 -0.110  0 0 -0.400" size="0.075" mass="10.6"/>
+
+                <body name="left_shank_body" pos="0 0 -0.400">
+                    <joint name="left_knee_flex" axis="0 1 0" range="0 135" damping="2"/>
+                    <geom name="left_shank" type="capsule" fromto="0 0 0  0 0 -0.430" size="0.050" mass="3.25"/>
+
+                    <body name="left_foot_body" pos="0 0 -0.430">
+                        <joint name="left_ankle_flex" axis="0 1 0" range="-30 50" damping="1"/>
+                        <joint name="left_ankle_inv" axis="1 0 0" range="-15 35" damping="1"/>
+                        <geom name="left_foot" type="box" pos="0.040 0 -0.055" size="0.105 0.048 0.035" friction="0.7 0.01 0" mass="0.80"/>
+
+                        <body name="left_toes_body" pos="0.145 0 -0.055">
+                            <joint name="left_toes_flex" axis="0 1 0" range="-60 25" damping="0.4" armature="0.0001"/>
+                            <geom name="left_toes_chunk" type="box" pos="0.015 0 -0.010" size="0.035 0.044 0.025" friction="0.7 0.01 0" mass="0.23"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+
+            <body name="right_thigh_body" pos="0 -0.100 0">
+                <joint name="right_hip_flex" axis="0 -1 0" range="-20 120" damping="3"/>
+                <joint name="right_hip_abd" axis="-1 0 0" range="-30 45" damping="3"/>
+                <joint name="right_hip_rot" axis="0 0 1" range="-45 45" damping="2"/>
+                <geom name="right_thigh" type="capsule" fromto="0 0 -0.110  0 0 -0.400" size="0.075" mass="10.6"/>
+
+                <body name="right_shank_body" pos="0 0 -0.400">
+                    <joint name="right_knee_flex" axis="0 1 0" range="0 135" damping="2"/>
+                    <geom name="right_shank" type="capsule" fromto="0 0 0  0 0 -0.430" size="0.050" mass="3.25"/>
+
+                    <body name="right_foot_body" pos="0 0 -0.430">
+                        <joint name="right_ankle_flex" axis="0 1 0" range="-30 50" damping="1"/>
+                        <joint name="right_ankle_inv" axis="-1 0 0" range="-15 35" damping="1"/>
+                        <geom name="right_foot" type="box" pos="0.040 0 -0.055" size="0.105 0.048 0.035" friction="0.7 0.01 0" mass="0.80"/>
+
+                        <body name="right_toes_body" pos="0.145 0 -0.055">
+                            <joint name="right_toes_flex" axis="0 1 0" range="-60 25" damping="0.4" armature="0.0001"/>
+                            <geom name="right_toes_chunk" type="box" pos="0.015 0 -0.010" size="0.035 0.044 0.025" friction="0.7 0.01 0" mass="0.23"/>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+    </worldbody>
+
+    <contact>
+        <exclude body1="pelvis_body" body2="lumbar_lower_body"/>
+        <exclude body1="pelvis_body" body2="lumbar_upper_body"/>
+        <exclude body1="lumbar_lower_body" body2="lumbar_upper_body"/>
+        <exclude body1="lumbar_lower_body" body2="thoracic_lower_body"/>
+        <exclude body1="lumbar_upper_body" body2="thoracic_lower_body"/>
+        <exclude body1="thoracic_lower_body" body2="thoracic_upper_body"/>
+        <exclude body1="thoracic_upper_body" body2="neck_body"/>
+        <exclude body1="thoracic_upper_body" body2="left_upper_arm_body"/>
+        <exclude body1="thoracic_upper_body" body2="right_upper_arm_body"/>
+        <exclude body1="thoracic_lower_body" body2="left_upper_arm_body"/>
+        <exclude body1="thoracic_lower_body" body2="right_upper_arm_body"/>
+        <exclude body1="left_forearm_body" body2="left_palm_body"/>
+        <exclude body1="left_palm_body" body2="left_thumb_body"/>
+        <exclude body1="left_palm_body" body2="left_fingers_body"/>
+        <exclude body1="right_forearm_body" body2="right_palm_body"/>
+        <exclude body1="right_palm_body" body2="right_thumb_body"/>
+        <exclude body1="right_palm_body" body2="right_fingers_body"/>
+        <exclude body1="pelvis_body" body2="left_thigh_body"/>
+        <exclude body1="left_thigh_body" body2="left_shank_body"/>
+        <exclude body1="left_shank_body" body2="left_foot_body"/>
+        <exclude body1="left_foot_body" body2="left_toes_body"/>
+        <exclude body1="pelvis_body" body2="right_thigh_body"/>
+        <exclude body1="right_thigh_body" body2="right_shank_body"/>
+        <exclude body1="right_shank_body" body2="right_foot_body"/>
+        <exclude body1="right_foot_body" body2="right_toes_body"/>
+    </contact>
+
+    <actuator>
+        <motor name="lumbar_lower_flex_motor" joint="lumbar_lower_flex" gear="1" ctrlrange="-65 45"/>
+        <motor name="lumbar_lower_lat_motor" joint="lumbar_lower_lat" gear="1" ctrlrange="-30 30"/>
+        <motor name="lumbar_lower_axial_motor" joint="lumbar_lower_axial" gear="1" ctrlrange="-20 20"/>
+        <motor name="lumbar_upper_flex_motor" joint="lumbar_upper_flex" gear="1" ctrlrange="-50 35"/>
+        <motor name="lumbar_upper_lat_motor" joint="lumbar_upper_lat" gear="1" ctrlrange="-30 30"/>
+        <motor name="lumbar_upper_axial_motor" joint="lumbar_upper_axial" gear="1" ctrlrange="-20 20"/>
+        <motor name="thoracic_lower_flex_motor" joint="thoracic_lower_flex" gear="1" ctrlrange="-30 30"/>
+        <motor name="thoracic_lower_lat_motor" joint="thoracic_lower_lat" gear="1" ctrlrange="-30 30"/>
+        <motor name="thoracic_lower_axial_motor" joint="thoracic_lower_axial" gear="1" ctrlrange="-20 20"/>
+        <motor name="thoracic_upper_flex_motor" joint="thoracic_upper_flex" gear="1" ctrlrange="-30 30"/>
+        <motor name="thoracic_upper_lat_motor" joint="thoracic_upper_lat" gear="1" ctrlrange="-30 30"/>
+        <motor name="thoracic_upper_axial_motor" joint="thoracic_upper_axial" gear="1" ctrlrange="-20 20"/>
+        <motor name="neck_flex_motor" joint="neck_flex" gear="1" ctrlrange="-32 30"/>
+        <motor name="neck_lat_motor" joint="neck_lat" gear="1" ctrlrange="-18 18"/>
+        <motor name="neck_axial_motor" joint="neck_axial" gear="1" ctrlrange="-10 10"/>
+        <motor name="left_shoulder_flex_motor" joint="left_shoulder_flex" gear="1" ctrlrange="-35 50"/>
+        <motor name="left_shoulder_abd_motor" joint="left_shoulder_abd" gear="1" ctrlrange="-50 40"/>
+        <motor name="left_shoulder_rot_motor" joint="left_shoulder_rot" gear="1" ctrlrange="-25 20"/>
+        <motor name="right_shoulder_flex_motor" joint="right_shoulder_flex" gear="1" ctrlrange="-35 50"/>
+        <motor name="right_shoulder_abd_motor" joint="right_shoulder_abd" gear="1" ctrlrange="-50 40"/>
+        <motor name="right_shoulder_rot_motor" joint="right_shoulder_rot" gear="1" ctrlrange="-25 20"/>
+        <motor name="left_elbow_flex_motor" joint="left_elbow_flex" gear="1" ctrlrange="-35 50"/>
+        <motor name="left_forearm_roll_motor" joint="left_forearm_roll" gear="1" ctrlrange="-13.1 16.2"/>
+        <motor name="left_wrist_flex_motor" joint="left_wrist_flex" gear="1" ctrlrange="-11.4 24.7"/>
+        <motor name="left_wrist_dev_motor" joint="left_wrist_dev" gear="1" ctrlrange="-7 15"/>
+        <motor name="left_thumb_flex_motor" joint="left_thumb_flex" gear="1" ctrlrange="-1.5 3"/>
+        <motor name="left_fingers_flex_motor" joint="left_fingers_flex" gear="1" ctrlrange="-3 6"/>
+        <motor name="right_elbow_flex_motor" joint="right_elbow_flex" gear="1" ctrlrange="-35 50"/>
+        <motor name="right_forearm_roll_motor" joint="right_forearm_roll" gear="1" ctrlrange="-13.1 16.2"/>
+        <motor name="right_wrist_flex_motor" joint="right_wrist_flex" gear="1" ctrlrange="-11.4 24.7"/>
+        <motor name="right_wrist_dev_motor" joint="right_wrist_dev" gear="1" ctrlrange="-7 15"/>
+        <motor name="right_thumb_flex_motor" joint="right_thumb_flex" gear="1" ctrlrange="-1.5 3"/>
+        <motor name="right_fingers_flex_motor" joint="right_fingers_flex" gear="1" ctrlrange="-3 6"/>
+        <motor name="left_hip_flex_motor" joint="left_hip_flex" gear="1" ctrlrange="-178 156"/>
+        <motor name="left_hip_abd_motor" joint="left_hip_abd" gear="1" ctrlrange="-90 80"/>
+        <motor name="left_hip_rot_motor" joint="left_hip_rot" gear="1" ctrlrange="-25 30"/>
+        <motor name="left_knee_flex_motor" joint="left_knee_flex" gear="1" ctrlrange="-180 90"/>
+        <motor name="left_ankle_flex_motor" joint="left_ankle_flex" gear="1" ctrlrange="-48.6 140.2"/>
+        <motor name="left_ankle_inv_motor" joint="left_ankle_inv" gear="1" ctrlrange="-29.9 34.8"/>
+        <motor name="left_toes_flex_motor" joint="left_toes_flex" gear="1" ctrlrange="-5 10"/>
+        <motor name="right_hip_flex_motor" joint="right_hip_flex" gear="1" ctrlrange="-178 156"/>
+        <motor name="right_hip_abd_motor" joint="right_hip_abd" gear="1" ctrlrange="-90 80"/>
+        <motor name="right_hip_rot_motor" joint="right_hip_rot" gear="1" ctrlrange="-25 30"/>
+        <motor name="right_knee_flex_motor" joint="right_knee_flex" gear="1" ctrlrange="-180 90"/>
+        <motor name="right_ankle_flex_motor" joint="right_ankle_flex" gear="1" ctrlrange="-48.6 140.2"/>
+        <motor name="right_ankle_inv_motor" joint="right_ankle_inv" gear="1" ctrlrange="-29.9 34.8"/>
+        <motor name="right_toes_flex_motor" joint="right_toes_flex" gear="1" ctrlrange="-5 10"/>
+    </actuator>
+</mujoco>

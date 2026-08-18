@@ -1,0 +1,2 @@
+iteration,action_loss,weighted_action_loss,actual_final_position_mse,actual_final_velocity_mse,state_error_weight_mean,state_error_weight_min,state_error_weight_max,batch_time_seconds,batch_size,action_abs,sequence_time_seconds,action_count
+0,0.05127899721264839,0.04479878395795822,0.04753363877534866,0.7124682664871216,1.007034420967102,0.6151517033576965,1.1445062160491943,1.74820589995943,64.0,0.06995806160072486,0.987375020980835,10.453125
