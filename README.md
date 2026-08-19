@@ -11,10 +11,10 @@ Recorded motion at 40 Hz
 Retargeting and motion validation
         |
         v
-Supervised trajectory planner
+Supervised 2-layer LSTM trajectory planner
         |
         v
-Recurrent residual goal policy
+Recurrent PPO residual goal policy
         |
         v
 400 Hz PD control and MuJoCo-Warp physics
@@ -22,6 +22,7 @@ Recurrent residual goal policy
         v
 Tracking, feasibility, and contact diagnostics
 ```
+
 [Goal Planner Demonstration](https://drive.google.com/file/d/1_TvY84Vsf9K0rAkNClDOgE5-6hx9far5/view?usp=sharing)
 
 The simulated body has 47 actuators and 24 tracked bodies. The project evolved through four research stages; the full history matters because the latest experiment is not yet a solved system.
@@ -40,7 +41,9 @@ The preserved v5 residual-refinement checkpoint contains 1,480 training records.
 
 Tracking improved modestly and the critic learned the return structure, but total validation cost worsened. This repository presents the result as an ongoing investigation, not a completed success.
 
-![Goal-refinement history](assets/Goal_Refinement_v5_Full_History.png)
+![Goal-refinement history](results/Goal_Refinement_v5_Full_History.png)
+
+For the staged research history and detailed result notes, see [`results/VERSION_HISTORY.md`](results/VERSION_HISTORY.md) and [`results/README.md`](results/README.md).
 
 ## Repository layout
 
@@ -63,7 +66,6 @@ python src/control/View_PD_Control.py --planner_compare
 
 ## Current Status/Next Steps
 
-- The current goal refinement AI improves; however, the sample efficiency and the computational power limit testing for further permutation of the model and hinder the learning process. I have implemented regional learning as a curriculum learning with cumulative noise for more meaningful noise for these problems, but further explorations are neccessary. The identification of the problem is essential for taking the next step forward.
-- Even though the validation MSE of the goal planner improves significantly without signs of overfitting, several observations of the demonstrations indicates the unneccessary movement from the start to end point that shouldn't be inferred from the end and start points only. Therefore, we have to implement Reinforcement learning to generate a cleaner trajectory. I decided not to implement the early stop. The monotonic decrease of the 
-- To connect the goal planner and goal refinement AI, we should connect both processes, having a start and end process as a refinement, outputting the refined goal. This is our final step.
-
+- The current goal-refinement model improves training cost and position tracking; however, sample efficiency and limited computational resources make it difficult to test additional model variants. I implemented regional learning as a curriculum, together with cumulative and smoothed exploration noise, to make the perturbations more meaningful, but further experiments are necessary to identify the main bottleneck.
+- The goal planner produces usable trajectories, but several demonstrations show unnecessary intermediate motion that cannot be inferred from the start and end states alone. The next step is to test reinforcement learning or early stopping.
+- The final integration step is to connect the goal planner and goal-refinement policy: generate a trajectory from the start and end states, then refine the intermediate goals before PD tracking.
