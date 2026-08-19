@@ -1,4 +1,4 @@
-# Humanoid Motion Goal Planning and Refinement
+# RL-Based Humanoid Motion Generation with Reference Trajectory Control
 
 Research code for turning recorded human motion into MuJoCo trajectories, testing those trajectories under torque-limited control, and learning goal corrections when direct tracking fails.
 
