@@ -1,3 +1,0 @@
-run_id,started_at,ended_at,start_iteration,end_iteration,elapsed_seconds,checkpoint_path
-run_20260714_031414,2026-07-14 03:14:14,2026-07-14 03:14:22,0,0,2.4867499999236315,C:\Users\shinj\Desktop\Body\Torch_state_error_weighted_timeaware_latest.pt
-run_20260714_031439,2026-07-14 03:14:39,2026-07-14 03:14:44,1,1,1.130341400159523,C:\Users\shinj\Desktop\Body\Torch_state_error_weighted_timeaware_latest.pt
