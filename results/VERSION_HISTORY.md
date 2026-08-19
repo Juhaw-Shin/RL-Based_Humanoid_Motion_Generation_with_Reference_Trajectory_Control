@@ -1,23 +1,33 @@
-# Version history
+# Version History
 
-The project is shown as a research progression rather than presenting only the newest unfinished model.
+This project evolved through several modeling approaches. Earlier versions are documented because failed approaches directly motivated the current architecture.
 
-## v1: supervised torque prediction
+## v1: Supervised Torque Prediction
 
-The first system learned actuator commands from state error. It generated random torque and train the model so that given the position prior the random torque and after the random torque, match the torque sequence it had. Even though this supervised learning lead to success, the generlization to the meaningful torque sequences was not successful.
+The first approach attempted to learn actuator torques directly from state transitions. Random torque sequences were applied to the humanoid, and a supervised model was trained to recover the corresponding torque sequence from the states before and after the motion.
 
-## v2: continuous-goal reinforcement learning
+The model learned the supervised training task, but it did not generalize reliably to meaningful long-horizon motion. This motivated moving away from direct torque prediction.
 
-The project moved from direct torque supervision to PPO policies for reaching single and repeated goals. There was big collapse caused by learning.
+## v2: Continuous-Goal Reinforcement Learning
 
-## v3: motion-sequence reinforcement learning
+The project shifted from supervised torque prediction to PPO-based policies for reaching individual and repeated target states.
 
-Short goal windows became recurrent, variable-duration motion rollouts with action and recurrent-state carriers. There were some degree of success, however long term motions were unstable. I think this caused because of the learning proccess itself, which forced the duration it have to reach the goal in, or just a lack of ability for machine learning to learn to the perfection
+Training suffered from policy collapse and unstable learning, which motivated changes to both the action representation and training procedure.
 
-## v4: residual goal refinement
+## v3: Motion-Sequence Reinforcement Learning
 
-The focus shifted to the data itself: CMU retargeting, shoulder discontinuities, spine allocation, joint clipping, collision correction, Hermite targets, PD gains, and torque feasibility.
+The target representation was extended from individual goals to recurrent, variable-duration motion sequences. The policy received short future goal windows together with recurrent state.
 
-A recurrent PPO actor proposed joint-position and joint-velocity residuals while a critic estimated causal rollout cost. The preserved checkpoint reached batch 1,480. Tracking improved modestly, but total held-out cost did not improve.
+This produced partial success on shorter motions, but longer-horizon behavior remained unstable. Possible causes included the difficulty of simultaneously learning motion timing, trajectory structure, and low-level actuation.
 
-I am still searching for the reason why the cost not decreased significantly, or the problem of sample efficiency.
+## v4/v5: Reference Motion and Residual Goal Refinement
+
+The project shifted toward separating trajectory generation from physical control.
+
+Motion data were retargeted and corrected for issues including shoulder discontinuities, spine allocation, joint clipping, self-collision, interpolation, PD gains, and torque feasibility.
+
+A supervised trajectory planner generates reference motion from initial and goal states. A recurrent PPO actor then proposes joint-position and joint-velocity residuals to refine the reference, while a PD controller converts the resulting targets into actuator torques.
+
+The preserved residual-refinement run reached 1,480 training batches. Position tracking improved modestly, but total held-out validation cost did not improve.
+
+The current research focus is understanding the source of this behavior and improving the sample efficiency and stability of residual refinement.
