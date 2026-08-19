@@ -22,6 +22,7 @@ Recurrent residual goal policy
         v
 Tracking, feasibility, and contact diagnostics
 ```
+[Goal Planner Demonstration](https://drive.google.com/file/d/1_TvY84Vsf9K0rAkNClDOgE5-6hx9far5/view?usp=sharing)
 
 The simulated body has 47 actuators and 24 tracked bodies. The project evolved through four research stages; the full history matters because the latest experiment is not yet a solved system.
 
@@ -59,3 +60,10 @@ python src/control/View_PD_Control.py --checkpoint_compare
 python src/control/View_PD_Control.py --checkpoint_pd
 python src/control/View_PD_Control.py --planner_compare
 ```
+
+## Current Status/Next Steps
+
+- The current goal refinement AI improves; however, the sample efficiency and the computational power limit testing for further permutation of the model and hinder the learning process. I have implemented regional learning as a curriculum learning with cumulative noise for more meaningful noise for these problems, but further explorations are neccessary. The identification of the problem is essential for taking the next step forward.
+- Even though the validation MSE of the goal planner improves significantly without signs of overfitting, several observations of the demonstrations indicates the unneccessary movement from the start to end point that shouldn't be inferred from the end and start points only. Therefore, we have to implement Reinforcement learning to generate a cleaner trajectory. I decided not to implement the early stop. The monotonic decrease of the 
+- To connect the goal planner and goal refinement AI, we should connect both processes, having a start and end process as a refinement, outputting the refined goal. This is our final step.
+
